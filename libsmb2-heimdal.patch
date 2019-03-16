@@ -1,0 +1,50 @@
+--- libsmb2-2.0.0/lib/krb5-wrapper.c.orig	2018-07-07 09:58:21.000000000 +0200
++++ libsmb2-2.0.0/lib/krb5-wrapper.c	2019-03-15 21:44:42.462181391 +0100
+@@ -53,7 +53,7 @@
+ #include <unistd.h>
+ #endif
+ 
+-#include <krb5/krb5.h>
++#include <krb5.h>
+ #include <gssapi/gssapi_krb5.h>
+ #include <gssapi/gssapi.h>
+ #include <stdio.h>
+@@ -154,7 +154,6 @@
+         char *nc_password = NULL;
+         gss_buffer_desc passwd;
+         gss_OID_set_desc mechOidSet;
+-        gss_OID_set_desc wantMech;
+ 
+         if (smb2->use_cached_creds) {
+                 /* Validate the parameters */
+@@ -268,6 +267,8 @@
+         }
+ 
+         if (smb2->sec != SMB2_SEC_UNDEFINED) {
++#if 0 /* FIXME: heimdal */
++                gss_OID_set_desc wantMech;
+                 wantMech.count = 1;
+                 if (smb2->sec == SMB2_SEC_KRB5) {
+                         wantMech.elements = discard_const(&spnego_mech_krb5);
+@@ -280,6 +281,10 @@
+                         krb5_set_gss_error(smb2, "gss_set_neg_mechs", maj, min);
+                         return NULL;
+                 }
++#else
++                krb5_set_gss_error(smb2, "gss_set_neg_mechs not supported for heimdal", maj, min);
++                return NULL;
++#endif
+         }
+ 
+         if (nc_password) {
+--- libsmb2-2.0.0/configure.ac.orig	2018-07-07 09:58:21.000000000 +0200
++++ libsmb2-2.0.0/configure.ac	2019-03-15 21:09:40.073571008 +0100
+@@ -74,7 +74,7 @@
+     AS_HELP_STRING([--without-libkrb5], [Do not link with libkrb5 and use builtin NTLMSSP module for authentication instead.]))
+ 
+ AS_IF([test "x$with_libkrb5" != "xno"],
+-      [MAYBE_LIBKRB5="-lgssapi_krb5"
++      [MAYBE_LIBKRB5="-lgssapi"
+        AC_DEFINE(HAVE_LIBKRB5,1,[Whether we use gssapi_krb5 or not])
+        AC_MSG_NOTICE(Build with gssapi_krb5 support)
+        # check for gssapi/gssapi.h
