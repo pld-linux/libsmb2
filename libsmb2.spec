@@ -8,13 +8,13 @@
 Summary:	Client library for accessing SMB shares over a network
 Summary(pl.UTF-8):	Biblioteka kliencka do dostępu do udziałów SMB w sieci
 Name:		libsmb2
-Version:	2.0.0
+Version:	3.0.0
 Release:	1
 License:	LGPL v2.1+
 Group:		Libraries
 #Source0Download: https://github.com/sahlberg/libsmb2/releases
 Source0:	https://github.com/sahlberg/libsmb2/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	7df639e1d5a4d01e7bfcaa2152946384
+# Source0-md5:	e70c2c1e4cd3b04c1993c9fa6c37ed89
 Patch0:		%{name}-heimdal.patch
 URL:		https://github.com/sahlberg/libsmb2
 BuildRequires:	autoconf >= 2.50
@@ -91,7 +91,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc COPYING README
 %attr(755,root,root) %{_libdir}/libsmb2.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libsmb2.so.2
+%attr(755,root,root) %ghost %{_libdir}/libsmb2.so.3
 
 %files devel
 %defattr(644,root,root,755)
