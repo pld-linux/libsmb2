@@ -37,14 +37,14 @@
          }
  
          if (nc_password) {
---- libsmb2-2.0.0/configure.ac.orig	2018-07-07 09:58:21.000000000 +0200
-+++ libsmb2-2.0.0/configure.ac	2019-03-15 21:09:40.073571008 +0100
-@@ -74,7 +74,7 @@
-     AS_HELP_STRING([--without-libkrb5], [Do not link with libkrb5 and use builtin NTLMSSP module for authentication instead.]))
+--- libsmb2-4.0.0/configure.ac.orig	2022-01-30 20:20:16.801567540 +0100
++++ libsmb2-4.0.0/configure.ac	2022-01-30 20:26:18.902939202 +0100
+@@ -31,7 +31,7 @@ AC_ARG_WITH([libkrb5],
+                              NTLMSSP module for authentication instead.])])
  
- AS_IF([test "x$with_libkrb5" != "xno"],
--      [MAYBE_LIBKRB5="-lgssapi_krb5"
-+      [MAYBE_LIBKRB5="-lgssapi"
-        AC_DEFINE(HAVE_LIBKRB5,1,[Whether we use gssapi_krb5 or not])
-        AC_MSG_NOTICE(Build with gssapi_krb5 support)
-        # check for gssapi/gssapi.h
+ AS_IF([test "x$with_libkrb5" != "xno"], [
+-    MAYBE_LIBKRB5="-lgssapi_krb5"
++    MAYBE_LIBKRB5="-lgssapi"
+     AC_DEFINE([HAVE_LIBKRB5], [1], [Whether we use gssapi_krb5 or not])
+     AC_MSG_NOTICE([Build with gssapi_krb5 support])
+     dnl  Check for gssapi/gssapi.h
