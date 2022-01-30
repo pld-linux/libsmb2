@@ -69,6 +69,7 @@ Statyczna biblioteka libsmb2.
 %{__automake}
 %configure \
 	%{!?with_static_libs:--disable-static} \
+	--disable-werror \
 	%{!?with_kerberos5:--without-libkrb5}
 %{__make}
 
