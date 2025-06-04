@@ -1,42 +1,23 @@
---- libsmb2-2.0.0/lib/krb5-wrapper.c.orig	2018-07-07 09:58:21.000000000 +0200
-+++ libsmb2-2.0.0/lib/krb5-wrapper.c	2019-03-15 21:44:42.462181391 +0100
-@@ -53,7 +53,7 @@
- #include <unistd.h>
+--- libsmb2-libsmb2-6.2/lib/krb5-wrapper.c.orig	2024-12-23 04:38:55.000000000 +0100
++++ libsmb2-libsmb2-6.2/lib/krb5-wrapper.c	2025-06-04 21:29:14.953938736 +0200
+@@ -57,7 +57,7 @@
+ #include <sys/unistd.h>
  #endif
  
 -#include <krb5/krb5.h>
 +#include <krb5.h>
- #include <gssapi/gssapi_krb5.h>
- #include <gssapi/gssapi.h>
- #include <stdio.h>
-@@ -154,7 +154,6 @@
-         char *nc_password = NULL;
-         gss_buffer_desc passwd;
-         gss_OID_set_desc mechOidSet;
--        gss_OID_set_desc wantMech;
- 
-         if (smb2->use_cached_creds) {
-                 /* Validate the parameters */
-@@ -268,6 +267,8 @@
+ #if __APPLE__
+ #include <GSS/GSS.h>
+ #else
+@@ -283,7 +283,7 @@ krb5_negotiate_reply(struct smb2_context
+                 return NULL;
          }
  
+-        #ifndef __APPLE__ /* gss_set_neg_mechs is not defined on macOS/iOS. */
++        #if !defined(__APPLE__) && 0 /* gss_set_neg_mechs is not defined on macOS/iOS/heimdal. */
          if (smb2->sec != SMB2_SEC_UNDEFINED) {
-+#if 0 /* FIXME: heimdal */
-+                gss_OID_set_desc wantMech;
-                 wantMech.count = 1;
-                 if (smb2->sec == SMB2_SEC_KRB5) {
-                         wantMech.elements = discard_const(&spnego_mech_krb5);
-@@ -280,6 +281,10 @@
-                         krb5_set_gss_error(smb2, "gss_set_neg_mechs", maj, min);
-                         return NULL;
-                 }
-+#else
-+                krb5_set_gss_error(smb2, "gss_set_neg_mechs not supported for heimdal", maj, min);
-+                return NULL;
-+#endif
-         }
+                 gss_OID_set_desc wantMech;
  
-         if (nc_password) {
 --- libsmb2-4.0.0/configure.ac.orig	2022-01-30 20:20:16.801567540 +0100
 +++ libsmb2-4.0.0/configure.ac	2022-01-30 20:26:18.902939202 +0100
 @@ -31,7 +31,7 @@ AC_ARG_WITH([libkrb5],
