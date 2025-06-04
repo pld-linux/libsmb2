@@ -58,7 +58,7 @@ Statyczna biblioteka libsmb2.
 %prep
 %setup -q
 %if %{without krb5}
-%patch0 -p1
+%patch -P0 -p1
 %endif
 
 %build
